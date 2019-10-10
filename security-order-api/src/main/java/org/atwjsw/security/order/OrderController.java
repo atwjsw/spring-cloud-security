@@ -1,10 +1,12 @@
 package org.atwjsw.security.order;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,9 +21,11 @@ public class OrderController {
 
 	@PostMapping
 	// public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal User user) {
-	public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal(expression = "#this.id") Long id) {
+	// public OrderInfo create(@RequestBody OrderInfo info, @AuthenticationPrincipal(expression = "#this.id") Long id) {
+	public OrderInfo create(@RequestBody OrderInfo info, @RequestHeader String username, HttpServletRequest request) {
 		// log.info("username is {}, id is {}", user.getUsername(), user.getId());
-		log.info("id is {}", id);
+		log.info("username is {}", username);
+		log.info("userInfo: {}", request.getAttribute("userInfo"));
 		// PriceInfo price = restTemplate.getForObject("http://localhost:9060/prices/" + info.getProductId(),
 		// PriceInfo.class);
 		// log.info("price is {}", price.getPrice());

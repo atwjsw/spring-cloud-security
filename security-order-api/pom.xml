@@ -32,10 +32,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- can be removed due to authorization logic is implemented in zuul gateway
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-oauth2</artifactId>
 		</dependency>
+		 -->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
