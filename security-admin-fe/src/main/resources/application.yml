@@ -1,0 +1,10 @@
+zuul:
+  routes:
+    api:
+      url: http://gateway.imooc.com:9070
+  sensitive-headers:
+
+spring:
+  application:
+    name: gateway
+  

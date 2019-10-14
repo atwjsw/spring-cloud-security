@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 @RestController
+@EnableZuulProxy
 public class AdminApplication {
 
 	@PostMapping("/login")
@@ -45,6 +47,11 @@ public class AdminApplication {
 
 		log.info("token info: {}", response.getBody());
 		request.getSession().setAttribute("token", response.getBody());
+	}
+
+	@PostMapping("/logout")
+	public void logout(HttpServletRequest request) {
+		request.getSession().invalidate();
 	}
 
 	public static void main(String[] args) {
