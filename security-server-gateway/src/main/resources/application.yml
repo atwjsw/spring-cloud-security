@@ -1,8 +1,8 @@
 zuul:
   routes:
     token:
-      url: http://localhost:9090
+      url: http://auth.imooc.com:9090
     order:
-      url: http://localhost:9080
+      url: http://order.imooc.com:9080
   sensitive-headers: #no sensative headers. all headers including header will be forwarded.
 server:  port: 9070

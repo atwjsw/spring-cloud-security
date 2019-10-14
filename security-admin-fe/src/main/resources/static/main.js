@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAvYXBwLmNvbXBvbmVudC5jc3MifQ== */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuY3NzIn0= */"
 
 /***/ }),
 
@@ -41,7 +41,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div [hidden]=\"!authenticated\">\n  <h1>\n    Welcome to {{ title }}!\n  </h1>\n  <button (click)=\"getOrder()\" type=\"button\" class=\"btn btn-primary\">Get Order Info</button>\n  <p>order id: {{ order.id }}</p>\n  <p>order product id: {{ order.productId }}</p>\n  <button (click)=\"logout()\" type=\"button\" class=\"btn btn-primary\">Logout</button>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-lg-4\"></div>\n  <div class=\"col-lg-4\">\n    <div [hidden]=\"authenticated\">\n      <p>Please login</p>\n      <form (submit)=\"login()\">\n        <div class=\"form-group\">\n          <label for=\"username\">Username:</label>\n          <input type=\"text\" class=\"form-control\" [(ngModel)]=\"credentials.username\" name=\"username\" />\n        </div>\n        <div class=\"form-group\">\n          <label for=\"password\">Passowrd:</label>\n          <input type=\"password\" class=\"form-control\" [(ngModel)]=\"credentials.password\" name=\"password\" />\n        </div>\n        <button type=\"submit\" class=\"btn btn-primary\">Login</button>\n      </form>\n\n    </div>\n  </div>\n  <div class=\"col-lg-4\"></div>\n</div>"
+module.exports = "<div [hidden]=\"!authenticated\">\r\n  <h1>\r\n    Welcome to {{ title }}!\r\n  </h1>\r\n  <button (click)=\"getOrder()\" type=\"button\" class=\"btn btn-primary\">Get Order Info</button>\r\n  <p>order id: {{ order.id }}</p>\r\n  <p>order product id: {{ order.productId }}</p>\r\n  <button (click)=\"logout()\" type=\"button\" class=\"btn btn-primary\">Logout</button>\r\n</div>\r\n"
 
 /***/ }),
 
@@ -70,11 +70,24 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 var AppComponent = /** @class */ (function () {
     function AppComponent(http) {
+        var _this = this;
         this.http = http;
         this.title = 'Security App';
         this.authenticated = false;
         this.credentials = { username: 'xixi', password: '123456' };
         this.order = {};
+        this.http.get('me').subscribe(function (data) {
+            if (data) {
+                _this.authenticated = true;
+            }
+            if (!_this.authenticated) {
+                window.location.href = 'http://auth.imooc.com:9090/oauth/authorize?' +
+                    'client_id=admin&' +
+                    'redirect_uri=http://admin.imooc.com:8080/oauth/callback&' +
+                    'response_type=code&' +
+                    'state=abc';
+            }
+        });
     }
     AppComponent.prototype.getOrder = function () {
         var _this = this;

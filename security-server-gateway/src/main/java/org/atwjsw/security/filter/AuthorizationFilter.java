@@ -3,7 +3,6 @@ package org.atwjsw.security.filter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -59,7 +58,8 @@ public class AuthorizationFilter extends ZuulFilter {
 		// the request goes to and what operations it wants to perform, then check if the token has the corresponding
 		// resourceIds
 		// resource-id (i.e. aud), scopes and authorities
-		return RandomUtils.nextInt() % 2 == 0;
+		// return RandomUtils.nextInt() % 2 == 0;
+		return true;
 	}
 
 	private void handleError(int status, RequestContext requestContext) {
