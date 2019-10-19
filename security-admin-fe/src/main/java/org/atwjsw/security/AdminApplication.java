@@ -35,7 +35,7 @@ public class AdminApplication {
 
 		log.info("state is {}", state);
 
-		String oauthSeriveUrl = "http://localhost:9070/token/oauth/token";
+		String oauthSeriveUrl = "http://gateway.imooc.com:9070/token/oauth/token";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -50,7 +50,7 @@ public class AdminApplication {
 
 		ResponseEntity<TokenInfo> token = new RestTemplate()
 				.exchange(oauthSeriveUrl, HttpMethod.POST, entity, TokenInfo.class);
-		request.getSession().setAttribute("token", token.getBody());
+		request.getSession().setAttribute("token", token.getBody().init());
 		log.info("token info: {}", token.getBody());
 		response.sendRedirect("/");
 	}

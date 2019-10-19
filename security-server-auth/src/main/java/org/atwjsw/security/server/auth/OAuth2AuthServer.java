@@ -1,4 +1,4 @@
-package org.atwjsw.security;
+package org.atwjsw.security.server.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

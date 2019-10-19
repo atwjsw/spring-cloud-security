@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -15,9 +16,11 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.session.jdbc.config.annotation.web.http.EnableJdbcHttpSession;
 
 @Configuration
 @EnableAuthorizationServer
+@EnableJdbcHttpSession
 public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
 	// Typical authentication logics (username/password, oauth2) is provided
@@ -44,10 +47,15 @@ public class OAuth2AuthServerConfig extends AuthorizationServerConfigurerAdapter
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private UserDetailsService userDetailsService;
+
 	// 配置哪些用户(Resource Owner)可以来访问认证服务器
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.authenticationManager(authenticationMananger)
+		endpoints
+				.userDetailsService(userDetailsService)
+				.authenticationManager(authenticationMananger)
 				.tokenStore(tokenStore());
 	}
 
