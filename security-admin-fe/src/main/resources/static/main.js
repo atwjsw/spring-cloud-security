@@ -57,6 +57,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -68,15 +69,17 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var AppComponent = /** @class */ (function () {
-    function AppComponent(http) {
+    function AppComponent(http, cookieService) {
         var _this = this;
         this.http = http;
+        this.cookieService = cookieService;
         this.title = 'Security App';
         this.authenticated = false;
         this.credentials = { username: 'xixi', password: '123456' };
         this.order = {};
-        this.http.get('me').subscribe(function (data) {
+        this.http.get('api/user/me').subscribe(function (data) {
             if (data) {
                 _this.authenticated = true;
             }
@@ -94,6 +97,8 @@ var AppComponent = /** @class */ (function () {
         this.http.get('api/order/orders/1').subscribe(function (data) { return _this.order = data; }, function () { return alert('get order fails'); });
     };
     AppComponent.prototype.logout = function () {
+        this.cookieService.delete('imooc_access_token', '/', 'imooc.com');
+        this.cookieService.delete('imooc_refresh_token', '/', 'imooc.com');
         this.http.post('logout', this.credentials).subscribe(function () {
             window.location.href = 'http://auth.imooc.com:9090/logout?redirect_uri=http://admin.imooc.com:8080';
             // this.authenticated = false
@@ -109,7 +114,7 @@ var AppComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"], ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__["CookieService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -148,11 +153,15 @@ var RefreshInterceptor = /** @class */ (function () {
         this.http = http;
     }
     RefreshInterceptor.prototype.intercept = function (req, next) {
-        var _this = this;
         return next.handle(req).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["tap"])(function () { }, function (error) {
             console.log(error);
             if (error.status === 500 && error.error.message === 'Token refresh failed') {
-                _this.logout();
+                // this.logout();
+                window.location.href = 'http://auth.imooc.com:9090/oauth/authorize?' +
+                    'client_id=admin&' +
+                    'redirect_uri=http://admin.imooc.com:8080/oauth/callback&' +
+                    'response_type=code&' +
+                    'state=abc';
             }
         }));
     };
@@ -186,12 +195,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var _app_interceptor__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app.interceptor */ "./src/app/app.interceptor.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/ngx-cookie-service.es5.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -212,6 +223,7 @@ var AppModule = /** @class */ (function () {
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClientModule"]
             ],
             providers: [
+                ngx_cookie_service__WEBPACK_IMPORTED_MODULE_6__["CookieService"],
                 { provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HTTP_INTERCEPTORS"], useClass: _app_interceptor__WEBPACK_IMPORTED_MODULE_5__["RefreshInterceptor"], multi: true }
             ],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]

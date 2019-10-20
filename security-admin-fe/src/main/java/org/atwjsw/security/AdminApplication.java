@@ -2,6 +2,7 @@ package org.atwjsw.security;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,7 +51,21 @@ public class AdminApplication {
 
 		ResponseEntity<TokenInfo> token = new RestTemplate()
 				.exchange(oauthSeriveUrl, HttpMethod.POST, entity, TokenInfo.class);
-		request.getSession().setAttribute("token", token.getBody().init());
+
+		// request.getSession().setAttribute("token", token.getBody().init());
+		// refactor to not use session
+		Cookie accessTokenCookie = new Cookie("imooc_access_token", token.getBody().getAccess_token());
+		accessTokenCookie.setMaxAge(token.getBody().getExpires_in().intValue());
+		accessTokenCookie.setDomain("imooc.com");
+		accessTokenCookie.setPath("/");
+		response.addCookie(accessTokenCookie);
+
+		Cookie refreshTokenCookie = new Cookie("imooc_refresh_token", token.getBody().getRefresh_token());
+		refreshTokenCookie.setMaxAge(259200);
+		refreshTokenCookie.setDomain("imooc.com");
+		refreshTokenCookie.setPath("/");
+		response.addCookie(refreshTokenCookie);
+
 		log.info("token info: {}", token.getBody());
 		response.sendRedirect("/");
 	}

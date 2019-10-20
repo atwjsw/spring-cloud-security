@@ -1,5 +1,7 @@
 zuul:
   routes:
+    user:
+      url: http://auth.imooc.com:9090
     token:
       url: http://auth.imooc.com:9090
     order:

@@ -16,7 +16,12 @@ export class RefreshInterceptor implements HttpInterceptor {
 				error => {
 					console.log(error);
 					if (error.status === 500 && error.error.message === 'Token refresh failed') {
-						this.logout();
+						// this.logout();
+						 window.location.href = 'http://auth.imooc.com:9090/oauth/authorize?' +
+        				'client_id=admin&' +
+						'redirect_uri=http://admin.imooc.com:8080/oauth/callback&' +
+						'response_type=code&' +
+						'state=abc';
 					}
 				}
 			)
